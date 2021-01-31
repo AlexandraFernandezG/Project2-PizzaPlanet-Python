@@ -1,7 +1,12 @@
 #from django.shortcuts import render
 from django.http import HttpResponse
+from django.shortcuts import render
 
-def index(request):
-    return HttpResponse('¡Hola! Usted está en el índice de Pizza Planet')
+def inicio(request):
+    return render(request, 'pizzaplanet/inicio.html')
 
-# Create your views here.
+def catalogo(request):
+    return render(request, 'pizzaplanet/catalogo.html')
+
+def pedidos(request):
+    return render(request, 'pizzaplanet/pedidos.html')

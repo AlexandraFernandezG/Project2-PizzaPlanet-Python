@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'pizzaplanet.apps.PizzaplanetConfig',
+    'pizzaplanet.apps.PizzaplanetConfig', #esto se podria cambiar, poniendo solo 'pizzaplanet'
 ]
 
 MIDDLEWARE = [
