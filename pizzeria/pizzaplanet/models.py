@@ -40,7 +40,7 @@ class Calificacion(models.Model):
     def __str__(self):
         return self.comentario
 
-class Tamaño(models.Model):
+class Tamano(models.Model):
     tipo = models.CharField(max_length=200)
     precio = models.DecimalField(max_digits=6, decimal_places=2)
 
@@ -57,7 +57,7 @@ class Ingrediente(models.Model):
 
 
 class Pizza(models.Model):
-    tamaño = models.ForeignKey(Tamaño, on_delete=models.CASCADE)
+    tamano = models.ForeignKey(Tamano, on_delete=models.CASCADE)
     simple = models.BooleanField(default=True)
     precio = models.DecimalField(max_digits=6, decimal_places=2)
 
