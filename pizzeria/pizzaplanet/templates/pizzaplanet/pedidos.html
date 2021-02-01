@@ -3,6 +3,175 @@
 <!-- {% load static %} en caso de que haya que cargar algo estatico -->
 
 {% block content %}
-    <h3>Pedidos</h3>
+<div class="row">
+    <!-- Resumen lateral -->
+    <div class="col-md-4 order-md-2 mb-4">
+      <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted">Su orden</span>
+        <span class="badge badge-secondary badge-pill">3</span>
+      </h4>
+      <ul class="list-group mb-3">
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+          <div>
+            <h6 class="my-0">Product name</h6>
+            <small class="text-muted">Brief description</small>
+          </div>
+          <span class="text-muted">$12</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+          <div>
+            <h6 class="my-0">Second product</h6>
+            <small class="text-muted">Brief description</small>
+          </div>
+          <span class="text-muted">$8</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+          <div>
+            <h6 class="my-0">Third item</h6>
+            <small class="text-muted">Brief description</small>
+          </div>
+          <span class="text-muted">$5</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between bg-light">
+          <div class="text-success">
+            <h6 class="my-0">Promo code</h6>
+            <small>EXAMPLECODE</small>
+          </div>
+          <span class="text-success">-$5</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span>Total (USD)</span>
+          <strong>$20</strong>
+        </li>
+      </ul>
+    </div>
+    <!-- Form Pedido -->
+    <div class="col-md-8 order-md-1">
+      <h4 class="mb-3">Pedido #XXXX</h4>
+      <form class="needs-validation" novalidate>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="firstName">Nombre</label>
+            <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="lastName">Cédula</label>
+            <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
+          </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="inputTamano">Tamaño</label>
+            </div>
+            <div class="col-md-6">
+                <select class="custom-select d-block w-100" id="country">
+                    <option value="">Seleccione el tamaño</option>
+                    <option>Grande</option>
+                    <option>Mediana</option>
+                    <option>Personal</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="ingredienteSwitch1">
+                    <label class="custom-control-label" for="ingredienteSwitch1">Jamón</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="ingredienteSwitch2">
+                    <label class="custom-control-label" for="ingredienteSwitch2">Champiñones</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="ingredienteSwitch3">
+                    <label class="custom-control-label" for="ingredienteSwitch3">Pimentón</label>
+                </div>
+                <div class="custom-control custom-switch">
+                   <input type="checkbox" class="custom-control-input" id="ingredienteSwitch4">
+                   <label class="custom-control-label" for="ingredienteSwitch4">Doble Queso</label>
+              </div>
+              <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="ingredienteSwitch5">
+                    <label class="custom-control-label" for="ingredienteSwitch5">Aceitunas</label>
+            </div>
+            <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="ingredienteSwitch6">
+                    <label class="custom-control-label" for="ingredienteSwitch6">Pepperoni</label>
+          </div>
+          <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="ingredienteSwitch7">
+                    <label class="custom-control-label" for="ingredienteSwitch7">Salchichón</label>
+        </div>
+            </div>
+            <div class="col-md-6">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="bebidaSwitch1">
+                    <label class="custom-control-label" for="bebidaSwitch1">Refresco Coca-Cola (2 litros)</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="bebidaSwitch2">
+                    <label class="custom-control-label" for="bebidaSwitch2">Refresco Frescolita (2 litros)</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="bebidaSwitch3">
+                    <label class="custom-control-label" for="bebidaSwitch3"></label>Refresco Golden Uva (2 litros)
+                </div>
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="bebidaSwitch4">
+                  <label class="custom-control-label" for="bebidaSwitch4"></label>Refresco 7UP (2 litros)
+              </div>
+            </div>
+        </div>
+        <hr class="mb-4">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="save-info">
+                  <label class="custom-control-label" for="save-info">Delivery</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <label for="inputZona" class="col-md-3">Zona</label>
+                    <select class="custom-select col-md-9 d-block w-100" id="country">
+                        <option value="">Seleccione una zona</option>
+                        <option>Antimano</option>
+                        <option>El Paraiso</option>
+                        <option>La Paz</option>
+                        <option>Caricuao</option>
+                        <option>Sabana Grande</option>
+                        <option>Chacao</option>
+                        <option>Chacaito</option>
+                        <option>Coche</option>
+                        <option>El Valle</option>
+                        <option>Bello Monte</option>
+                        <option>Zona Rental</option>
+                        <option>El Marqués</option>
+                        <option>San Bernandino</option>
+                        <option>Baruta</option>
+                        <option>El Hatillo</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <form>
+                    <div class="form-group row">
+                      <label class="col-md-3">Direccion</label>
+                      <div class="col-md-9">
+                          <div class="row">
+                              <input type="text" name="" id="" class="form-control col-md-12 mb-1" placeholder="Indique su dirección" aria-describedby="helpId">
+                              <small id="helpId" class="text-muted">Ej. Av. Teheran, calle 10</small>
+                          </div>
+                      </div>   
+                    </div>
+                </form>
+            </div>
+        </div>  
+        <br>
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Confirmar pedido</button>
+      </form>
+    </div>
+  </div>
 {% endblock content %}
     
