@@ -2,6 +2,12 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
+'''  
+context = { 
+    'latest_question_list': latest_question_list,     Aqui pongo datos para mandarlo a template
+}
+'''
+
 def inicio(request):
     return render(request, 'pizzaplanet/inicio.html')
 
