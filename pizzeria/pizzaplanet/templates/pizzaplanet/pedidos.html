@@ -3,6 +3,7 @@
 <!-- {% load static %} en caso de que haya que cargar algo estatico -->
 
 {% block content %}
+
 <div class="row">
     <!-- Resumen lateral -->
     <div class="col-md-4 order-md-2 mb-4">
@@ -65,62 +66,30 @@
                 <label for="inputTamano">Tamaño</label>
             </div>
             <div class="col-md-6">
-                <select class="custom-select d-block w-100" id="country">
+                <select class="custom-select d-block w-100" id="tamano">
                     <option value="">Seleccione el tamaño</option>
-                    <option>Grande</option>
-                    <option>Mediana</option>
-                    <option>Personal</option>
+                    {% for tamano in tamanos_temp %}
+                    <option>{{tamano.tipo}}</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6">
+              {% for ingrediente in ingredientes_temp %}
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="ingredienteSwitch1">
-                    <label class="custom-control-label" for="ingredienteSwitch1">Jamón</label>
+                    <input type="checkbox" class="custom-control-input" id={{ingrediente.id}}>
+                    <label class="custom-control-label" for={{ingrediente.id}}>{{ingrediente.nombre}} - {{ingrediente.precio}}$</label>  
                 </div>
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="ingredienteSwitch2">
-                    <label class="custom-control-label" for="ingredienteSwitch2">Champiñones</label>
-                </div>
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="ingredienteSwitch3">
-                    <label class="custom-control-label" for="ingredienteSwitch3">Pimentón</label>
-                </div>
-                <div class="custom-control custom-switch">
-                   <input type="checkbox" class="custom-control-input" id="ingredienteSwitch4">
-                   <label class="custom-control-label" for="ingredienteSwitch4">Doble Queso</label>
-              </div>
-              <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="ingredienteSwitch5">
-                    <label class="custom-control-label" for="ingredienteSwitch5">Aceitunas</label>
-            </div>
-            <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="ingredienteSwitch6">
-                    <label class="custom-control-label" for="ingredienteSwitch6">Pepperoni</label>
-          </div>
-          <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="ingredienteSwitch7">
-                    <label class="custom-control-label" for="ingredienteSwitch7">Salchichón</label>
-        </div>
+              {% endfor %}
             </div>
             <div class="col-md-6">
+              {% for bebida in  bebidas_temp %}
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="bebidaSwitch1">
-                    <label class="custom-control-label" for="bebidaSwitch1">Refresco Coca-Cola (2 litros)</label>
+                    <input type="checkbox" class="custom-control-input" id={{bebida.id}}+bebida>
+                    <label class="custom-control-label" for={{bebida.id}}+bebida>{{bebida.tipo}} - {{bebida.precio}}$</label>
                 </div>
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="bebidaSwitch2">
-                    <label class="custom-control-label" for="bebidaSwitch2">Refresco Frescolita (2 litros)</label>
-                </div>
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="bebidaSwitch3">
-                    <label class="custom-control-label" for="bebidaSwitch3"></label>Refresco Golden Uva (2 litros)
-                </div>
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="bebidaSwitch4">
-                  <label class="custom-control-label" for="bebidaSwitch4"></label>Refresco 7UP (2 litros)
-              </div>
+              {% endfor %}
             </div>
         </div>
         <hr class="mb-4">

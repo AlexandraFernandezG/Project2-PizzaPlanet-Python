@@ -31,8 +31,8 @@ def pedidos(request):
         bebidas_temp.append({"id": bebida.id, "tipo": bebida.tipo, "precio": bebida.precio})
 
     context = {
-        "tamanos": tamanos,
-        "ingredientes": ingredientes,
-        "bebida" : bebida,
+        "tamanos_temp": tamanos_temp,
+        "ingredientes_temp": ingredientes_temp,
+        "bebidas_temp" : bebidas_temp,
     }
     return render(request, 'pizzaplanet/pedidos.html', context)
