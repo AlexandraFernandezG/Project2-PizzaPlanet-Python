@@ -49,96 +49,96 @@
     <!-- Form Pedido -->
     <div class="col-md-8 order-md-1">
       <h4 class="mb-3">Pedido #XXXX</h4>
-      <form class="needs-validation" novalidate>
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label for="firstName">Nombre</label>
-            <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+      <form action="enviar" method="GET" class="needs-validation" novalidate>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="firstName">Nombre</label>
+              <input type="text" class="form-control" id="firstName" name = "firstName" placeholder="" value="" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="lastName">Cédula</label>
+              <input type="text" class="form-control" id="lastName"  name = "lastName" placeholder="" value="" required>
+            </div>
           </div>
-          <div class="col-md-6 mb-3">
-            <label for="lastName">Cédula</label>
-            <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
-          </div>
-        </div>
 
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <label for="inputTamano">Tamaño</label>
-            </div>
-            <div class="col-md-6">
-                <select class="custom-select d-block w-100" id="tamano">
-                    <option value="">Seleccione el tamaño</option>
-                    {% for tamano in tamanos_temp %}
-                    <option>{{tamano.tipo}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-              {% for ingrediente in ingredientes_temp %}
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id={{ingrediente.id}}>
-                    <label class="custom-control-label" for={{ingrediente.id}}>{{ingrediente.nombre}} - {{ingrediente.precio}}$</label>  
-                </div>
-              {% endfor %}
-            </div>
-            <div class="col-md-6">
-              {% for bebida in  bebidas_temp %}
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id={{bebida.id}}+bebida>
-                    <label class="custom-control-label" for={{bebida.id}}+bebida>{{bebida.tipo}} - {{bebida.precio}}$</label>
-                </div>
-              {% endfor %}
-            </div>
-        </div>
-        <hr class="mb-4">
-        <div class="row">
-            <div class="col-md-2">
-                <div class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" id="save-info">
-                  <label class="custom-control-label" for="save-info">Delivery</label>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="row">
-                    <label for="inputZona" class="col-md-3">Zona</label>
-                    <select class="custom-select col-md-9 d-block w-100" id="country">
-                        <option value="">Seleccione una zona</option>
-                        <option>Antimano</option>
-                        <option>El Paraiso</option>
-                        <option>La Paz</option>
-                        <option>Caricuao</option>
-                        <option>Sabana Grande</option>
-                        <option>Chacao</option>
-                        <option>Chacaito</option>
-                        <option>Coche</option>
-                        <option>El Valle</option>
-                        <option>Bello Monte</option>
-                        <option>Zona Rental</option>
-                        <option>El Marqués</option>
-                        <option>San Bernandino</option>
-                        <option>Baruta</option>
-                        <option>El Hatillo</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <form>
-                    <div class="form-group row">
-                      <label class="col-md-3">Direccion</label>
-                      <div class="col-md-9">
-                          <div class="row">
-                              <input type="text" name="" id="" class="form-control col-md-12 mb-1" placeholder="Indique su dirección" aria-describedby="helpId">
-                              <small id="helpId" class="text-muted">Ej. Av. Teheran, calle 10</small>
-                          </div>
-                      </div>   
-                    </div>
-                </form>
-            </div>
-        </div>  
-        <br>
-        <button class="btn btn-primary btn-lg btn-block" type="submit">Confirmar pedido</button>
+          <div class="row">
+              <div class="col-md-4 mb-3">
+                  <label for="inputTamano">Tamaño</label>
+              </div>
+              <div class="col-md-6">
+                  <select name="tmo" class="custom-select d-block w-100" id="tamano">
+                      <option value="">Seleccione el tamaño</option>
+                      {% for tamano in tamanos_temp %}
+                      <option>{{tamano.tipo}}</option>
+                      {% endfor %}
+                  </select>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-6">
+                {% for ingrediente in ingredientes_temp %}
+                  <div class="custom-control custom-switch">
+                      <input name="ingredientes" type="checkbox" value="{{ingrediente.id}}" class="custom-control-input" id={{ingrediente.id}}>
+                      <label class="custom-control-label" for={{ingrediente.id}}>{{ingrediente.nombre}} - {{ingrediente.precio}}$</label>  
+                  </div>
+                {% endfor %}
+              </div>
+              <div class="col-md-6">
+                {% for bebida in  bebidas_temp %}
+                  <div class="custom-control custom-switch">
+                      <input name="bebidas" type="checkbox" value="{{bebida.id}}" class="custom-control-input" id={{bebida.id}}+bebida>
+                      <label class="custom-control-label" for={{bebida.id}}+bebida>{{bebida.tipo}} - {{bebida.precio}}$</label>
+                  </div>
+                {% endfor %}
+              </div>
+          </div>
+          <hr class="mb-4">
+          <div class="row">
+              <div class="col-md-2">
+                  <div class="custom-control custom-checkbox">
+                    <input value="true" nombre="delivery" type="checkbox" class="custom-control-input" id="save-info">
+                    <label class="custom-control-label" for="save-info">Delivery</label>
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="row">
+                      <label for="inputZona" class="col-md-3">Zona</label>
+                      <select name="zona" class="custom-select col-md-9 d-block w-100" id="country">
+                          <option value="">Seleccione una zona</option>
+                          <option>Antimano</option>
+                          <option>El Paraiso</option>
+                          <option>La Paz</option>
+                          <option>Caricuao</option>
+                          <option>Sabana Grande</option>
+                          <option>Chacao</option>
+                          <option>Chacaito</option>
+                          <option>Coche</option>
+                          <option>El Valle</option>
+                          <option>Bello Monte</option>
+                          <option>Zona Rental</option>
+                          <option>El Marqués</option>
+                          <option>San Bernandino</option>
+                          <option>Baruta</option>
+                          <option>El Hatillo</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="col-md-6">
+                
+                      <div class="form-group row">
+                        <label class="col-md-3">Direccion</label>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <input type="text" name="direccion" id="" class="form-control col-md-12 mb-1" placeholder="Indique su dirección" aria-describedby="helpId">
+                                <small id="helpId" class="text-muted">Ej. Av. Teheran, calle 10</small>
+                            </div>
+                        </div>   
+                      </div>
+                 
+              </div>
+          </div>  
+          <br>
+      <button type="submit" class="btn btn-primary btn-lg btn-block">Confirmar pedido</button>
       </form>
     </div>
   </div>

@@ -2,6 +2,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from .models import Tamano, Ingrediente, Bebida
+from django.http import HttpResponse
 
 '''  
 context = { 
@@ -21,6 +22,8 @@ def pedidos(request):
     bebidas_temp = []
     tamanos_temp = []
 
+    #pizzas = [ {}, {}]
+
     for ingrediente in ingredientes:
         ingredientes_temp.append({"id": ingrediente.id, "nombre": ingrediente.nombre, "precio": ingrediente.precio})
   
@@ -36,3 +39,13 @@ def pedidos(request):
         "bebidas_temp" : bebidas_temp,
     }
     return render(request, 'pizzaplanet/pedidos.html', context)
+
+def enviar(request):
+    nombre=request.GET["firstName"]
+    ingrediente=request.GET["ingredientes"]
+
+    message = request.GET
+
+    print(message)
+    print("Pedido listo. Cliente: "+nombre)
+    return HttpResponse(message)
