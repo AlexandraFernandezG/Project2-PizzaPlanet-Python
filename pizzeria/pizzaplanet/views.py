@@ -77,8 +77,16 @@ def enviar(request):
         pizza_ingredientes = Ingrediente_pizza(pizza=pizza_pedido,ingrediente=Ingrediente.objects.get(id=i))
         pizza_ingredientes.save()
 
+   #Actualizar precio pizza 
 
+    for i in lista_ingredientes:
+        pizza_pedido.precio = pizza_pedido.precio + Ingrediente.objects.get(id=i).precio
+        pizza_pedido.save()
 
-    message = "Pedido listo"
+   #Actualizar precio pedido
+
+    pedido_actual.total = pizza_pedido.precio
+
+    message = "Pedido realizado exitosamente."
 
     return HttpResponse(message)
