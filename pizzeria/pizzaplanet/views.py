@@ -1,8 +1,9 @@
 #from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render
-from .models import Tamano, Ingrediente, Bebida
+from .models import Tamano, Ingrediente, Bebida, Cliente, Pedido, Pizza, Ingrediente_pizza
 from django.http import HttpResponse
+import datetime
 
 '''  
 context = { 
@@ -41,11 +42,43 @@ def pedidos(request):
     return render(request, 'pizzaplanet/pedidos.html', context)
 
 def enviar(request):
-    nombre=request.GET["firstName"]
-    ingrediente=request.GET["ingredientes"]
+    lista_ingredientes=request.GET.getlist("ingredientes")
+    print(lista_ingredientes)
 
-    message = request.GET
+    try:
+        test=str(Cliente.objects.get(cedula=str(request.GET['cedula'])))
+    except Cliente.DoesNotExist:
+        test=None
 
-    print(message)
-    print("Pedido listo. Cliente: "+nombre)
+   #Cliente
+
+    if(test==None):
+        cliente_nuevo=Cliente(nombre=request.GET['nombre'], cedula=request.GET['cedula'])
+        cliente_nuevo.save()
+        print(cliente_nuevo.id)
+    else:  
+        cliente_nuevo= Cliente.objects.get(cedula=str(request.GET['cedula']))
+
+   #Pedido
+
+    pedido_actual = Pedido(cliente=cliente_nuevo, fecha=datetime.datetime.now(), total=0)
+    pedido_actual.save()
+
+   #Pizza
+
+    tamano_pizza = Tamano.objects.get(tipo=str(request.GET['tmo']))
+    pizza_pedido = Pizza(simple=True, tamano_id=tamano_pizza, pedido = pedido_actual, precio = tamano_pizza.precio)
+    pizza_pedido.save()
+
+   #Ingrediente_pizza
+   
+    for i in lista_ingredientes:
+
+        pizza_ingredientes = Ingrediente_pizza(pizza=pizza_pedido,ingrediente=Ingrediente.objects.get(id=i))
+        pizza_ingredientes.save()
+
+
+
+    message = "Pedido listo"
+
     return HttpResponse(message)
