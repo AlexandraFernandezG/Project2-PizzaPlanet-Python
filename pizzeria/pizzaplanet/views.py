@@ -5,20 +5,25 @@ from .models import Tamano, Ingrediente, Bebida, Cliente, Pedido, Pizza, Ingredi
 from django.http import HttpResponse
 import datetime
 
-
+#Funcion que redirecciona al inicio de la aplicacion
 def inicio(request):
     return render(request, 'pizzaplanet/inicio.html')
 
+#Funcion que redirecciona al formulario de pedidos de la aplicacion
 def pedidos(request):
-    tamanos = Tamano.objects.all()
+    '''Se guardan los tamaños, ingredientes, bebidas registrados en la base de datos para 
+       pasarlos a la vista por el contexto y mostrarlos en el formulario
+    '''
+    tamanos = Tamano.objects.all()      
     ingredientes = Ingrediente.objects.all()
     bebidas = Bebida.objects.all()
-    cantPedidos = Pedido.objects.count() + 1
+    cantPedidos = Pedido.objects.count() + 1    #Se obtiene el numero del pedido a realizarse
 
     ingredientes_temp = []
     bebidas_temp = []
     tamanos_temp = []
 
+    #Se guardan en una lista los tamaños, bebidas e ingredientes para pasarlas por el contexto
     for ingrediente in ingredientes:
         ingredientes_temp.append({"id": ingrediente.id, "nombre": ingrediente.nombre, "precio": ingrediente.precio})
   
@@ -36,39 +41,43 @@ def pedidos(request):
     }
     return render(request, 'pizzaplanet/pedidos.html', context)
 
+#Funcion que crea los objetos asociados al pedido y genera los datos para mostrar la factura final
 def confirmacion(request):
     nombre_ingredientes = []
     nombre_bebidas = []
     
+    #Se obtiene la lista de los ingredientes y bebidas seleccionados por el usuario
     lista_ingredientes=request.GET.getlist("ingredientes")
     print(lista_ingredientes)
 
     lista_bebidas=request.GET.getlist("bebidas")
     print(lista_bebidas)
 
+    #Verifica mediante la cedula que el cliente exista en la base de datos
     try:
         existe_cliente=str(Cliente.objects.get(cedula=str(request.GET['cedula'])))
     except Cliente.DoesNotExist:
         existe_cliente=None
 
-   #Cliente
-
+    #Si el cliente no existe, se registra en la base de datos
     if(existe_cliente==None):
         cliente_nuevo=Cliente(nombre=request.GET['nombre'], cedula=request.GET['cedula'])
         cliente_nuevo.save()
         print(cliente_nuevo.id)
-    else:  
+    else:  #Si el cliente si existe, lo busca y lo guarda en una variable
         cliente_nuevo= Cliente.objects.get(cedula=str(request.GET['cedula']))
 
-   #Pedido
+   #Crea el pedido asignandole el cliente, fecha actual y total en 0 momentaneamente
 
     pedido_actual = Pedido(cliente=cliente_nuevo, fecha=datetime.datetime.now(), total=0)
     pedido_actual.save()
 
-   #Pizza
-
+    #Busca el tamaño de la pizza y lo guarda
     tamano_pizza = Tamano.objects.get(tipo=str(request.GET['tmo']))
-    ###arreglar
+
+    #Verifica si la pizza es simple(no tiene ingredientes adicionales
+    #Se crea la pizza asociada al pedido asociandole el pedido y tamaño. Tambien se le pone un precio en base al tamaño seleccionado
+    #Si no tiene ingredientes, el atributo simple sera "true" de lo contrario sera "false"
     if(int(len(lista_ingredientes))==0):
         pizza_pedido = Pizza(simple=True, tamano_id=tamano_pizza, pedido = pedido_actual, precio = tamano_pizza.precio)
     else: 
@@ -76,31 +85,32 @@ def confirmacion(request):
    
     pizza_pedido.save()
 
-   #Ingrediente_pizza
+   #Se crean los registros en la tabla Ingrediente_pizza
    
     for i in lista_ingredientes:
 
         pizza_ingredientes = Ingrediente_pizza(pizza=pizza_pedido,ingrediente=Ingrediente.objects.get(id=i))
         pizza_ingredientes.save()
 
-     #Bebida_pedido
+    #Se crean los registros en la tabla Bebida_pedido
 
     for i in lista_bebidas:
         bebida_pedido = Bebida_pedido(pedido=pedido_actual,bebida=Bebida.objects.get(id=i))
         bebida_pedido.save()
 
-   #Actualizar precio pizza 
+   #Se recorre la lista de ingredientes para añadir el monto adicional al precio de la pizza
 
     for i in lista_ingredientes:
         pizza_pedido.precio = pizza_pedido.precio + Ingrediente.objects.get(id=i).precio
         pizza_pedido.save()
 
-   #Delivery
+   #Se guarda la direccion del delivery
 
     zona = str(request.GET['zona'])
     direccion_delivery = str(request.GET['direccion'])
     direccion_completa = zona + ' ' +direccion_delivery
 
+    #Se verifica si el usuario pidio delivery
     if(zona!="Sin delivery"):
         delivery_pedido = Delivery(direccion=direccion_completa, precio=5)
         delivery_pedido.save()
@@ -109,7 +119,7 @@ def confirmacion(request):
         delivery_pedido = Delivery(direccion=None, precio=None)
         con_delivery=False
 
-   #Actualizar precio pedido
+   #Se actualiza en precio del pedido tomando el cuenta el monto final de la pizza, bebidas y delivery
 
     pedido_actual.total = pizza_pedido.precio
 
@@ -124,19 +134,15 @@ def confirmacion(request):
 
     pedido_actual.save()
 
-    message = "Pedido realizado exitosamente."
-    print(message)
+    #Se guardan los nombres de los ingredientes y bebidas para mostrarlos en la factura
 
     #Nombre ingredientes
     for i in lista_ingredientes:
         nombre_ingredientes.append(Ingrediente.objects.get(id=i))
     
-    #Nombre ingredientes
+    #Nombre bebidas
     for i in lista_bebidas:
         nombre_bebidas.append(Bebida.objects.get(id=i))
-
-    print(nombre_ingredientes)
-    print(nombre_bebidas)
 
     context = {
         "cliente_temp": cliente_nuevo,
@@ -151,7 +157,7 @@ def confirmacion(request):
         "precioDelivery_temp":  5,
     }
 
-    return render(request, 'pizzaplanet/confirmacion.html', context)
+    return render(request, 'pizzaplanet/confirmacion.html', context) #Redirecciona a la pagina de confirmacion del pedido
 
 #######################################################################
 # Reportes de Ventas

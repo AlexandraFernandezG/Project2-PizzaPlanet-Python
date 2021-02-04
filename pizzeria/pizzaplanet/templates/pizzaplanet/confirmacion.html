@@ -55,7 +55,7 @@
             {% if delivery_temp %}
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                     <div>
-                        <h6 class="my-0">{{zona_temp}}</h6>
+                        <h6 class="my-0">Delivery: {{zona_temp}}</h6>
                         <small class="text-muted">{{direccion_temp}}</small>
                     </div>
                     <span class="text-muted">{{precioDelivery_temp}}$</span>
@@ -70,5 +70,6 @@
         </ul>
     </div>
   </div>
+  <a href="{% url 'inicio' %}"><button name="button">Volver</button> <span class="sr-only">(current)</span></a>
 {% endblock content %}
     
