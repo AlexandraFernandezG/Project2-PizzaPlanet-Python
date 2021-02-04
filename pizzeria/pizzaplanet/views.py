@@ -255,6 +255,7 @@ def ventasCliente(request):
                     from pizzaplanet_pedido as Pedido, pizzaplanet_cliente as Cliente
                     WHERE Cliente.id=Pedido.cliente_id
                     group by Nombre, Pedido
+                    order by Total DESC
                 ''' 
     results = Cliente.objects.raw(raw_query)
     return render(request, 'pizzaplanet/ventasporclientes.html', {'resultado': results})
