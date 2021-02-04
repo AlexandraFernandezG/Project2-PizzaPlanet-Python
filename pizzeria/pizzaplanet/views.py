@@ -147,7 +147,7 @@ def confirmacion(request):
     context = {
         "cliente_temp": cliente_nuevo,
         "pedido_temp": pedido_actual,
-        "cantPizzas_temp": 3,
+        "cantPizzas_temp": 1,
         "tamano_temp": tamano_pizza,
         "ingredientes_temp": nombre_ingredientes,
         "bebidas_temp": nombre_bebidas,

@@ -4,7 +4,8 @@
     {% load static %}
     <!-- ejemplo de consumo de material estatico -->
     <!-- <link rel="stylesheet" href="{% static '/img/nombre.ext' %}"> -->
-
+    <!-- icono de la pestaña -->
+    <link rel="shortcut icon" href="{% static '/img/pizza-logo.png' %}" />
     
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -15,7 +16,7 @@
     <link rel="stylesheet" href="{% static '/css/bootstrap.css' %}">
     <meta name="theme-color" content="#563d7c">
 
-    <title>PizzaPlanet</title>
+    <title>Pizza Planet</title>
     <style>
       main > .container {
         padding: 60px 15px 0;
@@ -45,6 +46,21 @@
             </li>
             <li class="nav-item {% if request.path == '/pizzaplanet/pedidos' %} active {% endif %}">
               <a class="nav-link" href="{% url 'pedidos' %}">Pedidos</a>
+            </li>
+            <li class="nav-item {% if request.path == '/pizzaplanet/ventasGenerales' %} active {% endif %}">
+              <a class="nav-link" href="{% url 'ventasGenerales' %}">Reporte 1</a>
+            </li>
+            <li class="nav-item {% if request.path == '/pizzaplanet/ventasDia' %} active {% endif %}">
+              <a class="nav-link" href="{% url 'ventasDia' %}">Reporte 2</a>
+            </li>
+            <li class="nav-item {% if request.path == '/pizzaplanet/ventasTamano' %} active {% endif %}">
+              <a class="nav-link" href="{% url 'ventasTamano' %}">Reporte 3</a>
+            </li>
+            <li class="nav-item {% if request.path == '/pizzaplanet/ventasIngrediente' %} active {% endif %}">
+              <a class="nav-link" href="{% url 'ventasIngrediente' %}">Reporte 4</a>
+            </li>
+            <li class="nav-item {% if request.path == '/pizzaplanet/ventasCliente' %} active {% endif %}">
+              <a class="nav-link" href="{% url 'ventasCliente' %}">Reporte 5</a>
             </li>
           </ul>
         </div>

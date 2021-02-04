@@ -6,9 +6,9 @@ urlpatterns = [
     path('pedidos', views.pedidos, name="pedidos"),
     path('confirmacion', views.confirmacion, name="confirmacion"),
     path('ventasGenerales', views.ventasGenerales, name="ventasGenerales"),
-    path('ventasDia', views.ventasDia, name="ventasDia'"),
-    path('ventasTamano', views.ventasTamano, name="ventasTamano'"),
-    path('ventasIngrediente', views.ventasIngrediente, name="ventasIngrediente'"),
-    path('ventasCliente', views. ventasCliente, name="ventas ventasCliente'"),
+    path('ventasDia', views.ventasDia, name="ventasDia"),
+    path('ventasTamano', views.ventasTamano, name="ventasTamano"),
+    path('ventasIngrediente', views.ventasIngrediente, name="ventasIngrediente"),
+    path('ventasCliente', views. ventasCliente, name="ventasCliente"),
 
 ]
