@@ -192,11 +192,19 @@ def ventasDia(request):
 # Obtiene un listado de las ventas por tamaño de pizza
 def ventasTamano(request):
     
-    raw_query = '''
-                    SELECT Tamano.id as id, Tamano.tipo as Tamano, sum(Tamano.precio)
-                    FROM pizzaplanet_pedido as Pedido, pizzaplanet_pizza as Pizza, pizzaplanet_tamano as Tamano
-                    WHERE Pedido.id= Pizza.pedido_id and Pizza.id=Pizza.tamano_id_id 
-                    ORDER BY Tamano;
+    raw_query =  '''
+                    SELECT Tamano.id as id, Tamano.tipo as Tamano, SUM(Pizza.precio) as Total
+                    FROM pizzaplanet_pizza as Pizza, pizzaplanet_tamano as Tamano
+                    WHERE Tamano.id=Pizza.tamano_id_id and Tamano.tipo="Grande"
+                    UNION
+                    SELECT Tamano.id as id, Tamano.tipo as Tamano, SUM(Pizza.precio) as Total
+                    FROM pizzaplanet_pizza as Pizza, pizzaplanet_tamano as Tamano
+                    WHERE Tamano.id=Pizza.tamano_id_id and Tamano.tipo="Mediana"
+                    UNION
+                    SELECT Tamano.id as id, Tamano.tipo as Tamano, SUM(Pizza.precio) as Total
+                    FROM pizzaplanet_pizza as Pizza, pizzaplanet_tamano as Tamano
+                    WHERE Tamano.id=Pizza.tamano_id_id and Tamano.tipo="Personal"
+                    ORDER BY Tamano
                  ''' 
     results = Tamano.objects.raw(raw_query)
     return render(request, 'pizzaplanet/ventasportamano.html', {'resultado': results})
@@ -205,9 +213,37 @@ def ventasTamano(request):
 def ventasIngrediente(request):
     
     raw_query = '''SELECT Ingrediente.id as id, Ingrediente.nombre as Ingrediente, sum(Ingrediente.precio) as Total
-                   FROM pizzaplanet_pedido as Pedido, pizzaplanet_pizza as Pizza, pizzaplanet_ingrediente as Ingrediente, pizzaplanet_ingrediente_pizza IP
-                   WHERE Pedido.id= Pizza.pedido_id and Pizza.id=IP.pizza_id and Ingrediente.id=IP.ingrediente_id
-                   ORDER BY Ingrediente;
+                    FROM pizzaplanet_pizza as Pizza, pizzaplanet_ingrediente as Ingrediente, pizzaplanet_ingrediente_pizza IP
+                    WHERE Pizza.id=IP.pizza_id and Ingrediente.id=IP.ingrediente_id and Ingrediente.nombre="Pimenton"
+                    UNION
+                    SELECT Ingrediente.id as id, Ingrediente.nombre as Ingrediente, sum(Ingrediente.precio) as Total
+                    FROM pizzaplanet_pizza as Pizza, pizzaplanet_ingrediente as Ingrediente, pizzaplanet_ingrediente_pizza IP
+                    WHERE Pizza.id=IP.pizza_id and Ingrediente.id=IP.ingrediente_id and Ingrediente.nombre="Pepperoni"
+                    UNION
+                    SELECT Ingrediente.id as id, Ingrediente.nombre as Ingrediente, sum(Ingrediente.precio) as Total
+                    FROM pizzaplanet_pizza as Pizza, pizzaplanet_ingrediente as Ingrediente, pizzaplanet_ingrediente_pizza IP
+                    WHERE Pizza.id=IP.pizza_id and Ingrediente.id=IP.ingrediente_id and Ingrediente.nombre="Salchichon"
+                    UNION
+                    SELECT Ingrediente.id as id, Ingrediente.nombre as Ingrediente, sum(Ingrediente.precio) as Total
+                    FROM pizzaplanet_pizza as Pizza, pizzaplanet_ingrediente as Ingrediente, pizzaplanet_ingrediente_pizza IP
+                    WHERE Pizza.id=IP.pizza_id and Ingrediente.id=IP.ingrediente_id and Ingrediente.nombre="Aceitunas"
+                    UNION
+                    SELECT Ingrediente.id as id, Ingrediente.nombre as Ingrediente, sum(Ingrediente.precio) as Total
+                    FROM pizzaplanet_pizza as Pizza, pizzaplanet_ingrediente as Ingrediente, pizzaplanet_ingrediente_pizza IP
+                    WHERE Pizza.id=IP.pizza_id and Ingrediente.id=IP.ingrediente_id and Ingrediente.nombre="Champiñones"
+                    UNION
+                    SELECT Ingrediente.id as id, Ingrediente.nombre as Ingrediente, sum(Ingrediente.precio) as Total
+                    FROM pizzaplanet_pizza as Pizza, pizzaplanet_ingrediente as Ingrediente, pizzaplanet_ingrediente_pizza IP
+                    WHERE Pizza.id=IP.pizza_id and Ingrediente.id=IP.ingrediente_id and Ingrediente.nombre="Doble queso"
+                    UNION
+                    SELECT Ingrediente.id as id, Ingrediente.nombre as Ingrediente, sum(Ingrediente.precio) as Total
+                    FROM pizzaplanet_pizza as Pizza, pizzaplanet_ingrediente as Ingrediente, pizzaplanet_ingrediente_pizza IP
+                    WHERE Pizza.id=IP.pizza_id and Ingrediente.id=IP.ingrediente_id and Ingrediente.nombre="Pepperoni"
+                    UNION
+                    SELECT Ingrediente.id as id, Ingrediente.nombre as Ingrediente, sum(Ingrediente.precio) as Total
+                    FROM pizzaplanet_pizza as Pizza, pizzaplanet_ingrediente as Ingrediente, pizzaplanet_ingrediente_pizza IP
+                    WHERE Pizza.id=IP.pizza_id and Ingrediente.id=IP.ingrediente_id and Ingrediente.nombre="Jamon"
+                    ORDER BY Ingrediente;
                  ''' 
     results = Ingrediente.objects.raw(raw_query)
     return render(request, 'pizzaplanet/ventasporingrediente.html', {'resultado': results})
@@ -215,10 +251,10 @@ def ventasIngrediente(request):
 # Obtener un listado de las ventas por clientes (ordenado de mayor a menor)
 def ventasCliente(request):
     
-    raw_query = '''SELECT Cliente.id as id, sum(Pedido.total) as Total, Cliente.nombre as Nombre
-                   FROM pizzaplanet_pedido as Pedido, pizzaplanet_cliente as Cliente
-                   WHERE Cliente.id=Pedido.cliente_id 
-                   ORDER BY Pedido.total desc;
-                 ''' 
+    raw_query = '''select Cliente.id, Pedido.cliente_id as Pedido, cliente.nombre as Nombre, count(Pedido.cliente_id) as Total
+                    from pizzaplanet_pedido as Pedido, pizzaplanet_cliente as Cliente
+                    WHERE Cliente.id=Pedido.cliente_id
+                    group by Nombre, Pedido
+                ''' 
     results = Cliente.objects.raw(raw_query)
     return render(request, 'pizzaplanet/ventasporclientes.html', {'resultado': results})
