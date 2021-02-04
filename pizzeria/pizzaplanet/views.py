@@ -152,3 +152,65 @@ def confirmacion(request):
     }
 
     return render(request, 'pizzaplanet/confirmacion.html', context)
+
+#######################################################################
+# Reportes de Ventas
+#######################################################################
+
+
+# Obtiene un listado de las ventas realizadas (general)
+def ventasGenerales(request):
+    
+    raw_query = '''
+                    SELECT Pedido.id as id, Pedido.total as Total, Pedido.fecha as Fecha,  Cliente.nombre as Nombre
+                    FROM pizzaplanet_pedido as Pedido, pizzaplanet_cliente as Cliente
+                    WHERE Cliente.id=Pedido.cliente_id 
+                 ''' 
+    results = Pedido.objects.raw(raw_query)
+    return render(request, 'pizzaplanet/ventasgenerales.html', {'resultado': results})
+
+
+# Obtiene un listado de las ventas totales por día
+def ventasDia(request):
+    
+    raw_query = '''
+                    SELECT Pedido.id as id, SUM(Pedido.total) as Total, Pedido.fecha as Fecha
+                    FROM pizzaplanet_pedido as Pedido 
+                    ORDER BY Fecha;
+                 ''' 
+    results = Pedido.objects.raw(raw_query)
+    return render(request, 'pizzaplanet/ventaspordia.html', {'resultado': results})
+
+# Obtiene un listado de las ventas por tamaño de pizza
+def ventasTamano(request):
+    
+    raw_query = '''
+                    SELECT Tamano.id as id, Tamano.tipo as Tamano, sum(Tamano.precio)
+                    FROM pizzaplanet_pedido as Pedido, pizzaplanet_pizza as Pizza, pizzaplanet_tamano as Tamano
+                    WHERE Pedido.id= Pizza.pedido_id and Pizza.id=Pizza.tamano_id_id 
+                    ORDER BY Tamano;
+                 ''' 
+    results = Pedido.objects.raw(raw_query)
+    return render(request, 'pizzaplanet/ventasportamano.html', {'resultado': results})
+
+# Obtiene un listado de las ventas por ingredientes adicionales de pizza
+def ventasIngrediente(request):
+    
+    raw_query = '''SELECT Ingrediente.id as id, Ingrediente.nombre as Ingrediente, sum(Ingrediente.precio) as Total
+                   FROM pizzaplanet_pedido as Pedido, pizzaplanet_pizza as Pizza, pizzaplanet_ingrediente as Ingrediente, pizzaplanet_ingrediente_pizza IP
+                   WHERE Pedido.id= Pizza.pedido_id and Pizza.id=IP.pizza_id and Ingrediente.id=IP.ingrediente_id
+                   ORDER BY Ingrediente;
+                 ''' 
+    results = Ingrediente.objects.raw(raw_query)
+    return render(request, 'pizzaplanet/ventasporingrediente.html', {'resultado': results})
+
+# Obtener un listado de las ventas por clientes (ordenado de mayor a menor)
+def ventasCliente(request):
+    
+    raw_query = '''SELECT Cliente.id as id, sum(Pedido.total) as Total, Cliente.nombre as Nombre
+                   FROM pizzaplanet_pedido as Pedido, pizzaplanet_cliente as Cliente
+                   WHERE Cliente.id=Pedido.cliente_id 
+                   ORDER BY Pedido.total desc;
+                 ''' 
+    results = Cliente.objects.raw(raw_query)
+    return render(request, 'pizzaplanet/ventasporclientes.html', {'resultado': results})
