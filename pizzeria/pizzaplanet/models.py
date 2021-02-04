@@ -14,6 +14,9 @@ class Delivery(models.Model):
     direccion = models.CharField(max_length=200)
     precio = models.DecimalField(max_digits=6, decimal_places=2)
 
+    def __str__(self):
+        return self.direccion
+
 class Bebida(models.Model):
     tipo = models.CharField(max_length=200)
     precio = models.DecimalField(max_digits=6, decimal_places=2)
@@ -24,7 +27,6 @@ class Bebida(models.Model):
 class Pedido(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     delivery = models.ForeignKey(Delivery, on_delete=models.CASCADE, null=True)
-    bebida = models.ForeignKey(Bebida, on_delete=models.CASCADE, null=True)
     total = models.DecimalField(max_digits=6, decimal_places=2)
     fecha = models.DateTimeField('Fecha pedido', null=True)
 
@@ -65,5 +67,9 @@ class Pizza(models.Model):
 class Ingrediente_pizza(models.Model):
     ingrediente = models.ForeignKey(Ingrediente, on_delete=models.CASCADE)
     pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
+
+class Bebida_pedido(models.Model):
+    bebida = models.ForeignKey(Bebida, on_delete=models.CASCADE)
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
 
 
