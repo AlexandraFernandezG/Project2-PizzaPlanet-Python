@@ -144,6 +144,8 @@ def confirmacion(request):
     for i in lista_bebidas:
         nombre_bebidas.append(Bebida.objects.get(id=i))
 
+    cantPedidos = Pedido.objects.count()
+
     context = {
         "cliente_temp": cliente_nuevo,
         "pedido_temp": pedido_actual,
@@ -155,6 +157,7 @@ def confirmacion(request):
         "zona_temp": zona,
         "direccion_temp":  direccion_delivery,
         "precioDelivery_temp":  5,
+        "cantPedidos": cantPedidos
     }
 
     return render(request, 'pizzaplanet/confirmacion.html', context) #Redirecciona a la pagina de confirmacion del pedido
@@ -180,9 +183,8 @@ def ventasGenerales(request):
 def ventasDia(request):
     
     raw_query = '''
-                    SELECT Pedido.id as id, SUM(Pedido.total) as Total, Pedido.fecha as Fecha
-                    FROM pizzaplanet_pedido as Pedido 
-                    ORDER BY Fecha;
+                    SELECT Pedido.id as id, Pedido.total as Total, Pedido.fecha as Fecha
+                    FROM pizzaplanet_pedido as Pedido;
                  ''' 
     results = Pedido.objects.raw(raw_query)
     return render(request, 'pizzaplanet/ventaspordia.html', {'resultado': results})
@@ -196,7 +198,7 @@ def ventasTamano(request):
                     WHERE Pedido.id= Pizza.pedido_id and Pizza.id=Pizza.tamano_id_id 
                     ORDER BY Tamano;
                  ''' 
-    results = Pedido.objects.raw(raw_query)
+    results = Tamano.objects.raw(raw_query)
     return render(request, 'pizzaplanet/ventasportamano.html', {'resultado': results})
 
 # Obtiene un listado de las ventas por ingredientes adicionales de pizza
