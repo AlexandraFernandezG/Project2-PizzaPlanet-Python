@@ -1,14 +1,10 @@
 #from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render
-from .models import Tamano, Ingrediente, Bebida, Pedido
+from .models import Tamano, Ingrediente, Bebida, Cliente, Pedido, Pizza, Ingrediente_pizza,Bebida_pedido,Delivery
 from django.http import HttpResponse
+import datetime
 
-'''  
-context = { 
-    'latest_question_list': latest_question_list,     Aqui pongo datos para mandarlo a template
-}
-'''
 
 def inicio(request):
     return render(request, 'pizzaplanet/inicio.html')
@@ -22,8 +18,6 @@ def pedidos(request):
     ingredientes_temp = []
     bebidas_temp = []
     tamanos_temp = []
-
-    #pizzas = [ {}, {}]
 
     for ingrediente in ingredientes:
         ingredientes_temp.append({"id": ingrediente.id, "nombre": ingrediente.nombre, "precio": ingrediente.precio})
@@ -43,72 +37,118 @@ def pedidos(request):
     return render(request, 'pizzaplanet/pedidos.html', context)
 
 def confirmacion(request):
-    pedido = 1201
-    cantPizzas = 3
-    delivery = False
-    zona = None
-    direccion = None
+    nombre_ingredientes = []
+    nombre_bebidas = []
     
-    #hacer select de los ingredientes con nombre y precio
-    #hacer select de las bebidas con nombre y precio
-    #hacer select de la cantidad de pizzas del pedido
-    #saber como tengo el numero del pedido
-    #zona deberia ser un objeto para que me diga la zona y el precio
-    try:
-        if(request.GET["delivery"] == 'True'):
-            delivery = request.GET["delivery"]
-            zona = request.GET["zona"]
-            direccion = request.GET["direccion"]
-    except:
-        print('error')
+    lista_ingredientes=request.GET.getlist("ingredientes")
+    print(lista_ingredientes)
 
+    lista_bebidas=request.GET.getlist("bebidas")
+    print(lista_bebidas)
+
+    try:
+        existe_cliente=str(Cliente.objects.get(cedula=str(request.GET['cedula'])))
+    except Cliente.DoesNotExist:
+        existe_cliente=None
+
+   #Cliente
+
+    if(existe_cliente==None):
+        cliente_nuevo=Cliente(nombre=request.GET['nombre'], cedula=request.GET['cedula'])
+        cliente_nuevo.save()
+        print(cliente_nuevo.id)
+    else:  
+        cliente_nuevo= Cliente.objects.get(cedula=str(request.GET['cedula']))
+
+   #Pedido
+
+    pedido_actual = Pedido(cliente=cliente_nuevo, fecha=datetime.datetime.now(), total=0)
+    pedido_actual.save()
+
+   #Pizza
+
+    tamano_pizza = Tamano.objects.get(tipo=str(request.GET['tmo']))
+    ###arreglar
+    if(int(len(lista_ingredientes))==0):
+        pizza_pedido = Pizza(simple=True, tamano_id=tamano_pizza, pedido = pedido_actual, precio = tamano_pizza.precio)
+    else: 
+        pizza_pedido = Pizza(simple=False, tamano_id=tamano_pizza, pedido = pedido_actual, precio = tamano_pizza.precio)
+   
+    pizza_pedido.save()
+
+   #Ingrediente_pizza
+   
+    for i in lista_ingredientes:
+
+        pizza_ingredientes = Ingrediente_pizza(pizza=pizza_pedido,ingrediente=Ingrediente.objects.get(id=i))
+        pizza_ingredientes.save()
+
+     #Bebida_pedido
+
+    for i in lista_bebidas:
+        bebida_pedido = Bebida_pedido(pedido=pedido_actual,bebida=Bebida.objects.get(id=i))
+        bebida_pedido.save()
+
+   #Actualizar precio pizza 
+
+    for i in lista_ingredientes:
+        pizza_pedido.precio = pizza_pedido.precio + Ingrediente.objects.get(id=i).precio
+        pizza_pedido.save()
+
+   #Delivery
+
+    zona = str(request.GET['zona'])
+    direccion_delivery = str(request.GET['direccion'])
+    direccion_completa = zona + ' ' +direccion_delivery
+
+    if(zona!="Sin delivery"):
+        delivery_pedido = Delivery(direccion=direccion_completa, precio=5)
+        delivery_pedido.save()
+        con_delivery=True
+    else: 
+        delivery_pedido = Delivery(direccion=None, precio=None)
+        con_delivery=False
+
+   #Actualizar precio pedido
+
+    pedido_actual.total = pizza_pedido.precio
+
+    for i in lista_bebidas:
+        pedido_actual.total = pedido_actual.total + Bebida.objects.get(id=i).precio
+
+    if(con_delivery):
+        pedido_actual.delivery=delivery_pedido
+        pedido_actual.total = pedido_actual.total + delivery_pedido.precio
+    else: 
+        pass
+
+    pedido_actual.save()
+
+    message = "Pedido realizado exitosamente."
+    print(message)
+
+    #Nombre ingredientes
+    for i in lista_ingredientes:
+        nombre_ingredientes.append(Ingrediente.objects.get(id=i))
+    
+    #Nombre ingredientes
+    for i in lista_bebidas:
+        nombre_bebidas.append(Bebida.objects.get(id=i))
+
+    print(nombre_ingredientes)
+    print(nombre_bebidas)
 
     context = {
-        "nombre_temp": request.GET["firstName"],
-        "cedula_temp": request.GET["cedula"],
-        "pedido_temp": pedido,
-        "cantPizzas_temp": cantPizzas,
-        "ingredientes_temp": request.GET.getlist("ingredientes"),
-        "bebidas_temp": request.GET.getlist("bebidas"),
-        "delivery_temp": delivery,
+        "cliente_temp": cliente_nuevo,
+        "pedido_temp": pedido_actual,
+        "cantPizzas_temp": 3,
+        "tamano_temp": tamano_pizza,
+        "ingredientes_temp": nombre_ingredientes,
+        "bebidas_temp": nombre_bebidas,
+        "delivery_temp": con_delivery,
         "zona_temp": zona,
-        "direccion_temp":  direccion,
+        "direccion_temp":  direccion_delivery,
+        "precioDelivery_temp":  5,
     }
-    return render(request, 'pizzaplanet/confirmacion.html', context)
 
-
-
-
-def confirmacion(request):
-    pedido = 1201
-    cantPizzas = 3
-    delivery = False
-    zona = None
-    direccion = None
-    
-    #hacer select de los ingredientes con nombre y precio
-    #hacer select de las bebidas con nombre y precio
-    #hacer select de la cantidad de pizzas del pedido
-    #saber como tengo el numero del pedido
-    #zona deberia ser un objeto para que me diga la zona y el precio
-    try:
-        if(request.GET["delivery"] == 'True'):
-            delivery = request.GET["delivery"]
-            zona = request.GET["zona"]
-            direccion = request.GET["direccion"]
-    except:
-        print('error')
-
-
-    context = {
-        "nombre_temp": request.GET["firstName"],
-        "cedula_temp": request.GET["cedula"],
-        "pedido_temp": pedido,
-        "cantPizzas_temp": cantPizzas,
-        "ingredientes_temp": request.GET.getlist("ingredientes"),
-        "bebidas_temp": request.GET.getlist("bebidas"),
-        "delivery_temp": delivery,
-        "zona_temp": zona,
-        "direccion_temp":  direccion,
-    }
     return render(request, 'pizzaplanet/confirmacion.html', context)
